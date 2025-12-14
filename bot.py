@@ -67,6 +67,9 @@ REQUIRED_CHANNEL = "@tylershops"
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
+from antiflood import AntiFloodMiddleware
+
+dp.middleware.setup(AntiFloodMiddleware(limit=1.5))
 crypto = AioCryptoPay(token=CRYPTO_TOKEN, network=Networks.MAIN_NET)
 
 # ---------------------------------------------------------
@@ -573,5 +576,6 @@ async def back_to_menu(msg: types.Message):
 if __name__ == "__main__":
     print("Бот запущен!")
     executor.start_polling(dp, skip_updates=True)
+
 
 
