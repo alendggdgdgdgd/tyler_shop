@@ -1,7 +1,6 @@
 import json
 import os
-import asyncio
-from aiogram import Bot, Dispatcher, types
+from aiogram import Bot, Dispatcher, executor, types
 from aiocryptopay import AioCryptoPay, Networks
 
 DATA_FILE = "data.json"
@@ -54,8 +53,8 @@ def add_purchase_log(user_id, item_name, price):
 # 🔧 НАСТРОЙКИ (ВСТАВЬ СВОЙ BOT TOKEN И CRYPTO TOKEN!)
 # ---------------------------------------------------------
 
-BOT_TOKEN = "8567388355:AAGjHWv5silSgiKFiPuVjJqOHj7A0pjUBHY"
-CRYPTO_TOKEN = "496681:AALDalduDoExVarzyBxLdrmcKyZLXhTNhBd"
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+CRYPTO_TOKEN = os.getenv("CRYPTOPAY_TOKEN")
 
 ADMIN_ID = 5239669503
 
@@ -325,7 +324,7 @@ async def check_payment(call: types.CallbackQuery):
         f"🎉 <b>НОВАЯ ПОКУПКА</b>\n\n"
         f"👤 Покупатель: <a href=\"tg://user?id={call.from_user.id}\">{call.from_user.first_name}</a>\n"
         f"🛒 Товар: <b>{name}</b>\n"
-        f"💰 Цена: <b>{price} TON</b>\n"
+        f"💰 Цена: <b>{data['price']} TON</b>\n"
         f"📦 ID товара: <code>{item_id}</code>"
     )
 
@@ -571,9 +570,7 @@ async def back_to_menu(msg: types.Message):
 # 🚀 СТАРТ БОТА
 # ---------------------------------------------------------
 
-async def main():
-    print("Бот запущен!")
-    await dp.start_polling()
-
 if __name__ == "__main__":
-    asyncio.run(main())
+    print("Бот запущен!")
+    executor.start_polling(dp, skip_updates=True)
+
